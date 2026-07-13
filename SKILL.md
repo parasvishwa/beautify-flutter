@@ -1,7 +1,7 @@
 ---
 name: beautify-flutter
 description: Use when the user wants to design, redesign, build, critique, audit, polish, theme, animate, adapt, or otherwise improve a Flutter app's UI or UX. Covers full apps, screens, widgets, components, forms, onboarding, empty states, navigation, dashboards, and settings. Handles Material 3 theming, Cupertino/iOS adaptation, design tokens, color, dark mode, typography, fonts, spacing, layout, responsive/adaptive behavior for phones/tablets/desktop/web, motion, micro-interactions, haptics, gestures, loading/empty/error states, accessibility, text scaling, performance-as-UX, and Flutter anti-patterns. Also use for bland Flutter apps that need personality, default-looking Material apps that should feel premium, or apps that feel "ported" instead of native on iOS or Android. Not for backend-only, state-management-only, or non-UI Dart tasks.
-version: 1.2.0
+version: 1.3.0
 user-invocable: true
 argument-hint: "[interview|craft · audit|critique · polish|theme|typeset|colorize|layout|animate|signature · adapt|harden|optimize · redesign] [target]"
 license: MIT
@@ -140,7 +140,9 @@ If someone could look at this app and say "AI made that" (expressive) or "this i
 
 | Intent | Load | Covers |
 |---|---|---|
-| `interview` — ask what the user wants | [reference/interview.md](reference/interview.md) | Question flow, style matrix, animation personalities, skip-inference |
+| `interview` — ask what the user wants | [reference/interview.md](reference/interview.md) | Question flow, style matrix, animation personalities, copy voice, skip-inference |
+| placement, prominence & ordering decisions | [reference/psychology.md](reference/psychology.md) | Laws of UX with numbers, hierarchy science, CTA placement evidence, category psychology, ethics |
+| any user-visible string | [reference/copy.md](reference/copy.md) | Voice personalities, tone-by-moment, microcopy numbers, icons-vs-text, brevity |
 | `craft` — build a feature/screen/app end-to-end | [reference/craft.md](reference/craft.md) + [reference/interview.md](reference/interview.md) | Shape → foundation → build → states → verify flow |
 | component & animation picks | [reference/catalog.md](reference/catalog.md) | Button/nav/menu/card/loader variants, animation catalog, per-style defaults |
 | `theme` — foundation or theming work | [reference/theme.md](reference/theme.md) | Tokens, ColorScheme, ThemeData, component themes, ThemeExtension, dark mode |
@@ -192,6 +194,14 @@ Run before declaring any UI work done. **Not optional. Any unticked box = not do
 - [ ] Direction-agnostic layout (`EdgeInsetsDirectional`/`AlignmentDirectional` for asymmetric cases); key screens survive an RTL + long-string pass?
 - [ ] Status-bar icon brightness set for BOTH themes (`systemOverlayStyle`); launcher icon and splash are not defaults?
 
+**Hierarchy & psychology**
+- [ ] Exactly ONE filled high-contrast action per screen; the app's #1 action (interview Q5) owns the thumb zone and slot 1?
+- [ ] Blur test passed: one dominant blob, groupings legible?
+- [ ] Primary CTA in the bottom third, out of gesture/home-indicator zones; destructive actions never default, never adjacent to frequent controls?
+- [ ] Value/status/primary action all in viewport 1; nothing critical styled like a promo banner?
+- [ ] Zero dark patterns (fake urgency/scarcity, confirmshaming, hidden costs, preselected add-ons, buried cancel)?
+
 **Copy**
 - [ ] Every visible string re-read: no broken grammar, no AI-cute copy, no "Oops!", no em-dashes, no fake-precise numbers, no "John Doe" / "Acme" data?
-- [ ] Form labels persistent (not placeholder-only); errors below fields, specific, telling the user what to do?
+- [ ] One voice across all screens; tone follows the moment (never humor in errors); buttons verb-first and outcome-specific?
+- [ ] Form labels persistent (not placeholder-only); errors follow what-happened + how-to-fix; icon-only limited to universal icons with Semantics labels?

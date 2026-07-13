@@ -57,12 +57,27 @@ The primary theme is the design target: the palette is tuned in that mode first,
 5. **Bold & Dramatic** — choreographed entrances, big cinematic moves
 6. **You decide**
 
-## Round 2 — Details (only if the user is engaged)
+## Round 2 — Voice, hierarchy & expression (ask for full builds; skip for scoped tasks)
 
-**Q5 · Corners:** Sharp (0–4) · Soft (8–16, default) · Pill/round · iOS squircle · You decide
-**Q6 · Density:** Airy · Balanced (default) · Compact/data-dense
-**Q7 · Typography vibe:** Neutral/system · Distinctive modern (display grotesk) · Editorial serif headings · Mono/technical · You decide
-**Q8 · Navigation:** Bottom bar (default mobile) · Floating pill bar · Side rail (tablet/desktop) · Drawer · Top tabs · You decide
+**Q5 · The anchor question** *(highest-signal question for hierarchy — ask whenever building screens)*
+> "What is the ONE thing users should do most in this app?"
+The answer sets the entire prominence system: that action gets the only filled high-contrast button, the thumb-zone placement, slot 1 in lists, and the celebration moment. Everything else demotes to tonal/outlined/text. If skipped: infer from the app's category (e-commerce → add to cart; social → post/reply; fitness → start workout) and declare it.
+
+**Q6 · Copy voice**
+> "How should the app talk to users?"
+1. **Friendly & Warm** *(Airbnb, Slack)* · 2. **Playful & Funny** *(Duolingo)* · 3. **Minimal & Matter-of-fact** *(Apple, Notion)* · 4. **Professional & Corporate** · 5. **Premium & Refined** · 6. **Bold & Direct** *(Stripe, Nike)* · 7. **Supportive & Encouraging** *(Headspace)* · 8. You decide
+Follow-up when engaged: *"Complete this: 'We're ___ but never ___.'"* — the "never" half becomes the banned-tone list. Full personalities, tone-by-moment rules, and microcopy numbers: [copy.md](copy.md). If skipped: infer from register + category (utility → Minimal; education/kids → Playful; health → Supportive) and declare.
+
+**Q7 · Expression style (brevity & icons)**
+> "How wordy should the interface be?"
+1. **Crisp & icon-led** — minimal text, icon-forward visuals, tight headlines *(labels still present; only universal icons work solo — copy.md rules)*
+2. **Balanced** (default) — normal labels, short helper text
+3. **Explanatory** — more guidance text, spelled-out actions *(first-time-user-heavy or complex-domain apps)*
+If skipped: Balanced, leaning Crisp for utility register.
+
+**Q8 · Fine-tuning** *(one combined question, or inferred)*
+> "Any preferences on corners, density, typography, or navigation — or should I decide?"
+Corners: sharp 0–4 / soft 8–16 / pill / iOS squircle · Density: airy / balanced / compact · Type vibe: neutral-system / distinctive display / editorial serif / mono-technical · Nav: bottom bar / floating pill / rail / drawer / top tabs. All default to the Style Matrix row for the chosen Q1 style.
 
 ## Redesign-only round (existing apps)
 
@@ -103,6 +118,6 @@ Universal floors regardless of personality: press feedback everywhere, exits fas
 
 ## Component mapping
 
-Q1/Q4 answers select component recipes from [catalog.md](catalog.md): button style + press behavior, nav pattern, sheet/menu flavors, card treatment, loading personality. Load catalog.md whenever building after an interview.
+Q1/Q4 answers select component recipes from [catalog.md](catalog.md): button style + press behavior, nav pattern, sheet/menu flavors, card treatment, loading personality. Q5's answer drives placement and prominence via [psychology.md](psychology.md) (thumb zone, one-filled-button rule, slot-1 pinning). Q6 selects the voice system in [copy.md](copy.md); Q7 sets its brevity dial. Load all three when building after an interview.
 
 **NEVER:** ask more than 2 rounds; re-ask what the prompt already answered; ask mid-build (interview happens once, upfront); ship matrix specs without the register/brand pass; treat a skipped question as "do nothing" instead of "infer and declare."
