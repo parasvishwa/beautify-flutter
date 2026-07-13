@@ -1,7 +1,7 @@
 ---
 name: beautify-flutter
 description: Use when the user wants to design, redesign, build, critique, audit, polish, theme, animate, adapt, or otherwise improve a Flutter app's UI or UX. Covers full apps, screens, widgets, components, forms, onboarding, empty states, navigation, dashboards, and settings. Handles Material 3 theming, Cupertino/iOS adaptation, design tokens, color, dark mode, typography, fonts, spacing, layout, responsive/adaptive behavior for phones/tablets/desktop/web, motion, micro-interactions, haptics, gestures, loading/empty/error states, accessibility, text scaling, performance-as-UX, and Flutter anti-patterns. Also use for bland Flutter apps that need personality, default-looking Material apps that should feel premium, or apps that feel "ported" instead of native on iOS or Android. Not for backend-only, state-management-only, or non-UI Dart tasks.
-version: 1.4.1
+version: 1.5.0
 user-invocable: true
 argument-hint: "[interview|craft · audit|critique · polish|theme|typeset|colorize|layout|animate|signature · adapt|harden|optimize · redesign] [target]"
 license: MIT
@@ -17,10 +17,11 @@ The core belief: **default Flutter is a starting point that ships.** `ColorSchem
 
 You MUST do these steps before any design work:
 
-1. **Read the project.** Open `pubspec.yaml` (packages, fonts, Flutter version signals) and the theme setup (`lib/theme/`, `main.dart` `ThemeData`, any tokens file) plus one or two representative screens. Learn what exists before adding to it. If tokens/theme exist, identity-preservation wins: work within them unless asked to overhaul.
+1. **Read the project — starting with `DESIGN.md`.** If a `DESIGN.md` exists at the project root, it is the standing design contract (style, primary theme, accent, voice, dials, decisions log) — read it FIRST and obey it; new work extends it, never contradicts it silently. Then open `pubspec.yaml` and the theme setup (`lib/theme/`, `main.dart` `ThemeData`, tokens) plus one or two representative screens. If tokens/theme exist, identity-preservation wins: work within them unless asked to overhaul.
 2. **Classify the register.** **Expressive** (design IS the product: consumer apps, content, lifestyle, games' shells, portfolio pieces, anything competing on feel) vs **Utility** (design SERVES the task: tools, dashboards, admin, b2b, forms-heavy apps). Pick by first match: task cue → surface in focus → the app's nature. Registers change the rules; see the register sections below.
 3. **Interview, then read.** For `craft`, `theme`, `redesign`, or any full-surface work, run the **Design Interview** first ([reference/interview.md](reference/interview.md)): one round of up to 4 questions — **design style first, then the primary theme (dark or light — this one is always asked)**, then color and animation personality; the rest are skippable. Every skipped answer is inferred from the project and declared before building. Skip the interview entirely for small scoped tasks or when the prompt already answers it. Then state the **Design Read** in one line: *"Reading this as: \<app kind> for \<audience> on \<platform targets>, \<style> / \<animation personality>, \<register> register, dials \<V/M/D>."* Outside the interview, ask at most **one** clarifying question, and never when you can confidently infer.
 4. **Set the dials** (next section) from the read, not from habit.
+4b. **Persist the contract.** After the interview/read resolves (style, primary theme, accent hex, animation personality, voice, dials, the #1 action), write or update **`DESIGN.md` at the project root** — a short, declarative record with a decisions log. This is what stops cross-session drift (the second accent added in session 5, the third in session 9). Every future session reads it in step 1. When the user changes a decision, update DESIGN.md in the same commit.
 5. **Load the matching references** from the routing table before writing widget code. At minimum, always load [reference/theme.md](reference/theme.md) for anything touching visuals and [reference/anti-patterns.md](reference/anti-patterns.md) for anything user-visible. **Non-optional; skipping produces generic output.**
 6. **If the project is greenfield** (no committed theme), the foundation comes first: tokens → color scheme → type scale → component themes, per [reference/theme.md](reference/theme.md), before any screen is built.
 
@@ -108,6 +109,21 @@ Four questions, in order, before any animation (full framework in [reference/mot
 - Never break iOS edge-swipe back or Android predictive back.
 - Use `.adaptive()` constructors (`Switch`, `Slider`, `Checkbox`, `AlertDialog`, `CircularProgressIndicator`) where conventions differ; keep brand-owned components identical cross-platform. Full recipes in [reference/platform.md](reference/platform.md).
 
+## Write-time tripwires
+
+These fire while typing, not at review. Rules read at kickoff decay over a long session — so re-check this list **every time you write or edit widget code**, and run the tripwire greps (anti-patterns.md) after every UI edit; they cost seconds:
+
+1. About to type a `Color(`, `Colors.`, `fontSize:`, or numeric `BorderRadius`/`EdgeInsets` in a screen file → stop, use the token/theme.
+2. About to type `height:` < 1.1 on any heading → stop (descenders clip).
+3. About to wrap text in a fixed-height box → `minHeight`.
+4. About to put a `Text` in a `Row` without `Expanded`/`Flexible` → stop.
+5. About to introduce a color that isn't in DESIGN.md's palette → stop; that's how the third accent happens.
+6. About to add an icon-only button whose glyph isn't universal → add the label.
+7. About to build a fixed horizontal row of controls → will it fit 320dp at 1.3× text scale?
+8. About to style an upsell like a state toggle, or add a second "+" affordance → stop.
+9. About to add an overlay/floating element → does it occlude user content?
+10. Finished editing any screen → the pre-flight applies to THAT screen now, not "at the end of the project."
+
 ## Absolute bans
 
 Match-and-refuse. About to write one of these? Rewrite the element with different structure.
@@ -165,7 +181,7 @@ Routing: first word matches a command → load its reference and follow it. Inte
 
 ## FINAL PRE-FLIGHT CHECK
 
-Run before declaring any UI work done. **Not optional. Any unticked box = not done.**
+Run before declaring any UI work done — **per changed screen, not once per project**. Not optional. Any unticked box = not done. **Each ticked box must cite its evidence** — the file:line, test name, grep output, or screenshot that satisfies it. A bare "yes" is a failed check; self-attestation without evidence is how checked boxes ship broken screens. If you cannot run the app or capture screenshots, say so explicitly: *"⚠️ Degraded verification: static checks only"* — never imply visual verification happened when it didn't.
 
 **Foundation**
 - [ ] Design Read declared; dials explicit and reasoned?

@@ -78,6 +78,30 @@ Then just ask for Flutter UI work — the skill triggers automatically — or in
 
 **Codex:** point `AGENTS.md` at `SKILL.md` or paste it into your project instructions.
 
+## Enforcement — because guidance alone decays
+
+A skill *persuades*; over a long session, rules read at kickoff fade. beautify-flutter layers real enforcement on top:
+
+1. **`DESIGN.md` project contract** — the interview's resolved answers (style, accent, voice, dials) are written to your project root and re-read every session. This is what stops the classic drift where session 5 adds a second accent color and session 9 adds a third.
+2. **Write-time tripwires** — a 10-item in-SKILL checklist the agent re-checks while typing widget code, not at review time.
+3. **Mechanical greps** — [`hooks/design-check.sh`](hooks/design-check.sh) scans `lib/` for the objective tells (inline colors, tight heading leading, deprecated APIs, screenutil, shrinkWrap...). Run it manually, in CI, or wire it as a Claude Code hook so it runs automatically after every edit:
+
+```json
+// .claude/settings.json in your Flutter project
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{ "type": "command",
+        "command": "bash .claude/skills/beautify-flutter/hooks/design-check.sh ." }]
+    }]
+  }
+}
+```
+
+4. **Evidence-based pre-flight** — every checked box must cite its file:line, test, or screenshot; degraded verification (no device available) must be declared, never implied away.
+5. **Runtime truth** — the golden-test matrix (both themes × text scales × small widths) and the screenshot self-polish loop catch the class of bug no static rule can see: overlapping user content, clipped descenders, broken layouts at 360dp.
+
 ## Commands
 
 | Command | What it does |
