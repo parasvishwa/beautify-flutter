@@ -272,4 +272,10 @@ grep -rn "Theme.of(context)" lib/ --include="*.dart" | grep -iE "initState|stati
 6. Build one representative screen; verify in both modes at 100% and 130% text scale.
 7. Only then scale out to remaining screens.
 
+## 8. User-selectable theming
+
+- **A System/Light/Dark picker is table stakes.** Default to System; persist a `ThemeMode` with `shared_preferences` and apply it before the first frame (no theme flash at launch).
+- **Accent pickers** suit personal tools (notes, habits, planners), not strongly-branded products. Implementation is nearly free under M3: store one seed `Color`, regenerate both schemes via `ColorScheme.fromSeed`. Offer **6–10 curated seeds**, never a free color wheel (curated always looks good; free pickers let users build unreadable themes).
+- **Android dynamic color** (`dynamic_color` package, `DynamicColorBuilder`): opt in for utilities/readers where feeling native beats brand recall; opt out when color IS the brand. Middle path: brand seed by default, "Use wallpaper colors" as an option. Always harmonize semantic colors toward the active scheme; always keep the tuned brand scheme as the fallback.
+
 **NEVER:** style a component inline that a component theme could own; introduce a second radius family "just for this sheet"; define dark mode by inverting light values; use `flex_color_scheme` output without reviewing what it generated.

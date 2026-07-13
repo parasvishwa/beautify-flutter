@@ -59,7 +59,13 @@ testWidgets('home screen matrix', (tester) async {
 
 Overflow errors fail these tests automatically — that alone catches the most common shipped defect.
 
-Then an honest critique against the brief and [anti-patterns.md](anti-patterns.md): patch material defects, re-verify. Don't invent defects to look thorough; "first pass clean" is a legitimate verdict when it's true.
+**The self-polish loop** (generate → screenshot → critique → patch, gated):
+1. Screenshot the built screens at two sizes (360×690 + 430×932), both themes, with a long-content and an empty-data fixture.
+2. Critique against a **falsifiable rubric** in a fresh pass — score 0–2 each: spacing on the token scale? one type system? one icon family? contrast ≥ 4.5:1? states present (loading/empty/error)? one filled CTA in the thumb zone? blur test passes? dark mode actually designed? Run the anti-patterns greps in parallel — some defects are cheaper to find in code than pixels.
+3. Patch what scored < 2, re-screenshot.
+4. **Hard cap: 3 iterations.** First pass catches layout/hierarchy, second spacing/color; beyond three you're trading wall-clock for micro-nudges and risking fix-A-breaks-B oscillation. Stop early when scores plateau. Report residual misses honestly.
+
+Don't invent defects to look thorough; "first pass clean" is a legitimate verdict when it's true.
 
 ## Present
 

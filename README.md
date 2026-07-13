@@ -26,6 +26,8 @@ beautify-flutter/
     ├── catalog.md              # Component & animation catalog: buttons, menus, nav, per-style picks
     ├── psychology.md           # Laws of UX, hierarchy science, CTA placement evidence, category psychology
     ├── copy.md                 # Voice personalities, tone rules, microcopy numbers, icons-vs-text, brevity
+    ├── firstrun.md             # App icon (iOS 26/Android monochrome), splash choreography, onboarding, priming
+    ├── imagery.md              # Photo/illustration/typography lead, illustration grammar, duotone treatment
     ├── craft.md                # Build a feature/app end-to-end (shape → build → verify → goldens)
     ├── theme.md                # Design tokens, ColorScheme tuning, ThemeData, ThemeExtension, dark mode
     ├── typography.md           # Type scale, font selection procedure, variable fonts, text scaling

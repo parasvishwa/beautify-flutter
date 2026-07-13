@@ -68,8 +68,9 @@ The pixels outside your widgets are part of the design:
 
 - **Status/nav bar icons per theme** — the classic dark-mode miss. Set `AppBarTheme.systemOverlayStyle` in both themes (`SystemUiOverlayStyle.dark` icons on light surfaces, `.light` on dark), or `AnnotatedRegion<SystemUiOverlayStyle>` for app-bar-less screens.
 - **Edge-to-edge:** `SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge)` + transparent system bars; content scrolls under, `SafeArea` protects interactive elements.
-- **Launcher icon** (`flutter_launcher_icons`: adaptive icon on Android with distinct foreground/background layers, no full-bleed logo) and **splash** (`flutter_native_splash`: brand surface + centered mark in both modes — this is the fix for the banned default splash).
+- **Launcher icon and splash:** full recipes (iOS 26 layered `.icon`, Android adaptive **+ monochrome** layer, seamless splash-to-content handoff) live in [firstrun.md](firstrun.md).
 - Keyboard appearance follows theme on iOS (`TextField.keyboardAppearance` defaults from brightness — verify on custom-themed inputs).
+- **The last 5% (award-tier micro-details):** gradient/blur scroll-edge fades under floating chrome (the iOS 26 scroll-edge pocket, approximated with a `BackdropFilter`/gradient beneath app and tab bars); bottom list padding = `viewPadding.bottom + 16`; refresh indicator colored `primary`; text-selection handles themed; haptics land on the same frame as their visual event (a late haptic feels broken); platform overscroll kept (iOS bounce, Android stretch); heavy destination images precached so first navigation doesn't jank.
 
 ## Navigation architecture & gesture conflicts
 

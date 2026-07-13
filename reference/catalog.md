@@ -59,6 +59,38 @@ Scroll-aware chrome (premium tell): bar shrinks/hides on scroll-down, returns on
 | Dialog | `AlertDialog.adaptive` | Blocking decisions only |
 | Toast/snackbar | Floating `SnackBar` + action | Transient confirmations; never for errors needing action |
 
+## Iconography
+
+One family app-wide; a stray glyph from a second family is the strongest "unstyled Flutter" tell. Coherence axes:
+
+- **Stroke ↔ type weight:** ~1.5dp strokes pair with regular body text; 2dp with 500–600-weight UI. A thin icon next to bold text reads as a different product.
+- **Corner language ↔ radius family:** rounded-terminal icons with soft/pill UIs; sharp icons with editorial/square UIs.
+- **Selected state:** outlined at rest → **filled when selected** (M3 `NavigationBar` supports `selectedIcon:` natively; with Material Symbols animate the fill axis 0→100). No-fill families (Lucide): color + weight bump or the pill indicator instead.
+
+| Family | Character |
+|---|---|
+| `material_symbols_icons` | The M3 default — variable axes (fill 0–100, weight 100–700, grade, optical size); Outlined/Rounded/Sharp. Use `Symbols.x`; tune weight ~300 + grade for premium feel |
+| `phosphor_flutter` | 6 weights incl. duotone; design-forward, premium at light weight |
+| `iconsax_flutter` | 6 styles; "Bulk" duotone reads premium in fintech-class UIs |
+| `lucide_icons` | Clean modern-SaaS; no filled variants (plan selected states accordingly) |
+| `hugeicons` | Largest consistent system; obscure glyphs |
+| `cupertino_icons` / `flutter_sficon` | iOS-facing; note SF Symbols' license restricts to Apple platforms |
+
+Default Material `Icons.*` at default weight is the "untouched template" signal — if staying Material, use Symbols with tuned axes.
+
+## Charts & data viz
+
+`fl_chart` is the default (themeable, implicit animations); `CustomPainter` for one signature sparkline/ring; Syncfusion when enterprise interactivity and its license fit. What makes charts beautiful:
+
+- **Lines:** 2–3px stroke, `isStrokeCapRound: true`, `isCurved: true` (`curveSmoothness` ~0.35, `preventCurveOverShooting: true`), gradient area fill `primary` @ ~25–30% → transparent.
+- **Grid:** horizontal only, 3–4 lines max, 1px at 8–12% opacity `onSurface`. No vertical gridlines, no chart border.
+- **Bars:** rounded tops (radius ≈ ¼–½ bar width); non-selected bars dim when one is selected.
+- **Tooltips:** themed card (`surfaceContainerHigh`, app radius token, bold tabular values) — never the default gray.
+- **Draw-in:** swap from zeroed data to real data 250–800ms `easeOutCubic`, bars staggered 30–60ms; respect `disableAnimations`.
+- **Numbers:** `FontFeature.tabularFigures()` on every changing/aligned number; hero metrics 32–48sp semibold with a small `onSurfaceVariant` label and a direction-colored delta chip; count-ups 600–1000ms.
+- **Ramps from the scheme:** series = `primary`, `tertiary`, `secondary`, then tone steps of primary — never random hex; harmonize semantic green/red toward the scheme. Categorical max ~6 then group "other".
+- **States:** loading = skeleton silhouette of the *same chart type* (never a spinner); empty = faint ghost chart + one line + a CTA that creates the first data point; error keeps the card with a retry.
+
 ## Cards & surfaces
 
 - **Flat tinted** (`surfaceContainerLow`, no border) — Minimal, Soft

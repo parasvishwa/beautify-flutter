@@ -77,7 +77,7 @@ If skipped: Balanced, leaning Crisp for utility register.
 
 **Q8 · Fine-tuning** *(one combined question, or inferred)*
 > "Any preferences on corners, density, typography, or navigation — or should I decide?"
-Corners: sharp 0–4 / soft 8–16 / pill / iOS squircle · Density: airy / balanced / compact · Type vibe: neutral-system / distinctive display / editorial serif / mono-technical · Nav: bottom bar / floating pill / rail / drawer / top tabs. All default to the Style Matrix row for the chosen Q1 style.
+Corners: sharp 0–4 / soft 8–16 / pill / iOS squircle · Density: airy / balanced / compact · Type vibe: neutral-system / distinctive display / editorial serif / mono-technical · Nav: bottom bar / floating pill / rail / drawer / top tabs · **Visual lead:** photo-led / illustration-led / typography-led ([imagery.md](imagery.md)). All default to the Style Matrix row for the chosen Q1 style; visual lead defaults by category (marketplace → photo, finance/SaaS → illustration or typography, content → typography).
 
 ## Redesign-only round (existing apps)
 
