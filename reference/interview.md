@@ -1,0 +1,106 @@
+# The Design Interview
+
+Before changing a pixel, find out what the user actually wants. The interview replaces guessing with asking — and replaces asking with smart inference the moment the user skips. Every answer maps to concrete specs (below), so an answer is never just a vibe: it sets tokens, curves, and component choices.
+
+## When to run
+
+- `craft` on a new app or major feature → **always**, before the Design Read.
+- `theme` / full `redesign` → **always**.
+- Small scoped tasks ("fix this button", "audit") → **never**; use the existing theme + Design Read.
+- User already specified the direction in their prompt ("make it minimal, black and white") → skip the answered questions, ask only what's still open (often nothing).
+
+## How to ask
+
+- Use the harness's question tool (e.g. AskUserQuestion) when available — max 4 questions per round, **max 2 rounds**. Otherwise one compact numbered message.
+- **Round 1 is the interview.** Round 2 only if the user engages and details remain genuinely open.
+- Every question offers **"You decide"** — and silence = "You decide."
+- **Skip protocol:** any unanswered question is inferred from the project (app category, existing theme, pubspec, register) via the Design Read. Before building, declare the resolved choices in two lines: *"Going with: Elegant Premium, dark-first, ink+brass, smooth-premium motion. Say 'change X' to override."* The user can course-correct in one word instead of answering forms.
+
+## Round 1 — Direction (the four that matter)
+
+**Q1 · Design style** *(always first — anchor apps beat adjectives, so name both)*
+> "What overall design style should this app have?"
+1. **Minimal & Clean** — quiet, monochrome, generous whitespace *(like Things, Linear, Notion)*
+2. **Elegant & Premium** — refined, luxurious, understated depth *(like Airbnb, Aesop)*
+3. **Bold & Expressive** — loud color, big type, shape-morphing *(like Google's M3 Expressive apps, Spotify)*
+4. **Soft & Friendly** — rounded, warm, approachable *(like Headspace, Calm)*
+5. **Playful & Pop** — bouncy, colorful, fun *(like Duolingo)*
+6. **Editorial** — type-led, magazine-like, ink on paper *(like NYT, Medium)*
+7. **Dark Tech** — near-black, sharp, engineered *(like Revolut, Vercel)*
+8. **Glass & Futuristic** — floating translucent layers, depth *(like iOS 26, Apple Music)*
+9. **You decide from my app**
+
+Extended styles, offered only when the brief hints at them: **Brutalist/Raw** (hard black borders, offset shadows, zero radius — Gumroad-like) and **Neumorphic** (soft dual-shadow monochrome — accent use only; warn that full neumorphic UIs fail WCAG component contrast).
+
+If the user names a reference app instead of picking ("make it feel like Airbnb"), map the app to the nearest style row and say so. A follow-up worth its cost when the user is engaged: *"Any style or app you definitely DON'T want this to look like?"* — anti-preferences prune the space as fast as preferences.
+
+**Q2 · Theme mode** *(always second)*
+> "Light, dark, or both?"
+1. Both, follow system (default) · 2. Light-first · 3. Dark-first · 4. You decide
+
+**Q3 · Color**
+> "Do you have a brand color or a logo I should match? And how much color overall?"
+- **Hex code** ("#1B4D3E") — used as the seed, tuned per [color.md](color.md)
+- **Description** ("forest green", "warm terracotta") — resolved to a concrete hex, echoed back for confirmation
+- **Logo** — ask for the file path (or the asset already in the project: check `assets/`, `android/.../ic_launcher`, `web/icons/`). Read the image, extract the dominant brand hue + supporting tones, and derive the seed from it. State what was extracted: *"Your logo reads as deep teal #14655A with a coral accent — building the scheme around that."* The scheme must keep the logo legible on every surface it appears on.
+- **Skip / none** — infer a relevant palette from the app's category, chosen style, and register — while still passing the category-reflex check in [color.md](color.md) (relevant ≠ cliché: a finance app gets a trustworthy palette, not the navy-and-gold template).
+- Amount: **Restrained** (neutral + one accent) · **Committed** (color carries key surfaces) · **Colorful** (full palette) · **Monochrome + one pop** · You decide
+
+**Q4 · Animation personality**
+> "How should the app move?"
+1. **Calm & Minimal** — nearly still; instant, quiet transitions
+2. **Subtle & Elegant** — soft fades and small slides, nothing bouncy
+3. **Smooth & Premium** — flowing container morphs, hero transitions, rich but restrained
+4. **Springy & Playful** — bouncy pops, wiggle, celebratory moments
+5. **Bold & Dramatic** — choreographed entrances, big cinematic moves
+6. **You decide**
+
+## Round 2 — Details (only if the user is engaged)
+
+**Q5 · Corners:** Sharp (0–4) · Soft (8–16, default) · Pill/round · iOS squircle · You decide
+**Q6 · Density:** Airy · Balanced (default) · Compact/data-dense
+**Q7 · Typography vibe:** Neutral/system · Distinctive modern (display grotesk) · Editorial serif headings · Mono/technical · You decide
+**Q8 · Navigation:** Bottom bar (default mobile) · Floating pill bar · Side rail (tablet/desktop) · Drawer · Top tabs · You decide
+
+## Redesign-only round (existing apps)
+
+**QR1 · Scope:** Everything (full overhaul) · Modernize but keep the brand · Colors & theme only · Polish only (spacing, states, motion) · Specific screens: ___
+**QR2 · Must-keep:** brand colors / logo treatment / layout structure / copy voice / nothing sacred
+**QR3 · Pain point:** "What bothers you most about the current design?" (free text — this is the highest-signal question in the whole interview)
+
+## The Style Matrix — answers become specs
+
+Every Q1 answer resolves to a full spec. Tune to the brand; never ship the matrix raw without the Design Read pass.
+
+| Style | Color | Type | Corners | Surfaces | Spacing | Default motion |
+|---|---|---|---|---|---|---|
+| **Minimal & Clean** | Off-white/off-black + 1 accent ≤5% | One neutral sans, weight-led hierarchy | 8–12 | Hairline borders, no shadows | Generous (24–32 sections) | Calm-minimal |
+| **Elegant & Premium** | Deep ink base, muted warm neutrals, 1 rich accent | Refined grotesk or serif display + quiet body | 12–16 | Soft layered depth, optional film grain | Generous | Smooth-premium |
+| **Bold & Expressive** | Committed saturated color 30–60%, high contrast | Heavy display weights, oversized headlines | 0–8 or full pill (pick one) | Flat, color-blocked | Tight-but-rhythmic | Bold-dramatic |
+| **Soft & Friendly** | Warm light base, gentle accent pair | Rounded humanist sans (600 max) | 16–24 | Tinted fills, barely-there shadows | Airy | Springy-playful (gentle) |
+| **Playful & Pop** | Bright base or white + 2–3 vivid accents | Chunky rounded display | Pill-heavy | Color-blocked cards, sticker-like | Balanced | Springy-playful (full) |
+| **Editorial** | Paper + ink, one restrained accent | Serif display + sans body, big type scale | 0–4 | Ruled hairline dividers, no cards | Column-led, generous | Subtle-elegant |
+| **Dark Tech** | Near-black + desaturated neutrals + 1 electric accent | Grotesk + mono for data | 4–8 | 1px borders, subtle glow on accent only | Compact-balanced | Calm-minimal, crisp |
+| **Glass & Futuristic** | Dark or vivid backdrop, translucent surfaces | Clean grotesk, light weights | 16–24 + squircle | Blur panels (few!), floating chrome | Airy | Smooth-premium |
+
+Style × register conflicts resolve toward the register: Playful + finance app → soften to Soft & Friendly and say so. Glass + low-end-device target → solid-fill fallbacks (signature.md rules).
+
+## The Animation Matrix — Q4 becomes parameters
+
+| Personality | Curves | Durations | Springs (`SpringDescription.withDampingRatio`) | Signature moves | Haptics |
+|---|---|---|---|---|---|
+| **Calm & Minimal** | easeOutCubic / platform default | 120–200 | None | Fades only, 2–4px slides; instant where frequent | Selection ticks only |
+| **Subtle & Elegant** | `Easing.emphasizedDecelerate`, easeOutCubic | 200–300 | None (ratio 1.0) | Fade + 8–16px rise, gentle staggers (40ms) | Light, sparse |
+| **Smooth & Premium** | Emphasized set, easeOutQuart | 250–450 | ratio 0.9–1.0, stiffness 300–700 | Container transform, Hero, gesture-scrubbed parallax, crossfade+scale 0.96→1, shimmer accents | Choreographed to landings |
+| **Springy & Playful** | Springs everywhere | Spring-settled (~400–700) | ratio 0.5–0.7, stiffness 200–400 | Scale pops 1→1.15→1, error wobble (3× ±8px, 300ms), confetti on wins, stretchy overscroll, mascot/Rive reactions | Rich: pops, ticks, success buzz |
+| **Bold & Dramatic** | Emphasized + long deceleration | 350–650 (heroes only) | ratio 0.6–0.8 spatial (visible overshoot) | Shape morphs, choreographed entrances, big shared-axis moves, full-screen blur-in reveals | Strong at moments, quiet between |
+
+Spring anchor values (M3 Expressive motion tokens): *spatial* properties (position/size/shape) may bounce — fast 0.9/1400, default 0.9/700, slow 0.9/300 (damping/stiffness); *effects* (color/opacity/blur) never bounce — damping 1.0. Expressive feel drops spatial damping to 0.6–0.8. iOS reference points: `.smooth` ≈ damping 1.0, `.snappy` ≈ 0.85, `.bouncy` ≈ 0.7. Dark Tech adds: number count-up tickers, chart draw-ins 600–900ms, slow glow pulses.
+
+Universal floors regardless of personality: press feedback everywhere, exits faster than enters, `disableAnimations` respected, keyboard-frequency actions never animated ([motion.md](motion.md) owns the canonical numbers).
+
+## Component mapping
+
+Q1/Q4 answers select component recipes from [catalog.md](catalog.md): button style + press behavior, nav pattern, sheet/menu flavors, card treatment, loading personality. Load catalog.md whenever building after an interview.
+
+**NEVER:** ask more than 2 rounds; re-ask what the prompt already answered; ask mid-build (interview happens once, upfront); ship matrix specs without the register/brand pass; treat a skipped question as "do nothing" instead of "infer and declare."

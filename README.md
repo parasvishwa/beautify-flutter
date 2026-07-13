@@ -22,6 +22,8 @@ AI-generated Flutter apps all look the same: default Material widgets, category-
 beautify-flutter/
 ├── SKILL.md                    # Router: design read, dials, registers, rules, bans, pre-flight check
 └── reference/
+    ├── interview.md            # The Design Interview: style & animation questions, skip-inference
+    ├── catalog.md              # Component & animation catalog: buttons, menus, nav, per-style picks
     ├── craft.md                # Build a feature/app end-to-end (shape → build → verify → goldens)
     ├── theme.md                # Design tokens, ColorScheme tuning, ThemeData, ThemeExtension, dark mode
     ├── typography.md           # Type scale, font selection procedure, variable fonts, text scaling
@@ -40,12 +42,13 @@ beautify-flutter/
 
 ## How it works
 
-1. **Design Read** — the agent classifies the app (kind, audience, platforms, register) in one line before generating anything.
-2. **Three dials** — `DESIGN_VARIANCE` / `MOTION_INTENSITY` / `VISUAL_DENSITY`, set from the read with per-app-kind presets and mechanical thresholds.
-3. **Two registers** — *Expressive* (design IS the product) and *Utility* (design SERVES the task), each with its own slop test, permissions, and bans.
-4. **Theme-first, always** — zero inline styling; everything flows from tokens and `ThemeData`.
-5. **Reference routing** — deep guidance loads on demand per task, so agent context stays lean.
-6. **Pre-flight check** — a mechanical checklist (dark mode designed, contrast ≥ 4.5:1, 130% text scale, RTL pass, back-gestures intact, states designed…) the agent must pass before declaring UI work done.
+1. **Design Interview** — for new designs and redesigns, the agent first asks what you want: design style (minimal / elegant premium / bold / soft / playful / editorial / dark tech / glass, each anchored to real apps), light or dark, color (give a hex code, point at your logo to extract the palette from it, or skip), and animation personality (calm / subtle / smooth premium / springy playful / dramatic). Every question is skippable — skipped answers are inferred from your project and declared so you can override in one word.
+2. **Design Read** — the agent classifies the app (kind, audience, platforms, register) in one line before generating anything.
+3. **Three dials** — `DESIGN_VARIANCE` / `MOTION_INTENSITY` / `VISUAL_DENSITY`, set from the read with per-app-kind presets and mechanical thresholds.
+4. **Two registers** — *Expressive* (design IS the product) and *Utility* (design SERVES the task), each with its own slop test, permissions, and bans.
+5. **Theme-first, always** — zero inline styling; everything flows from tokens and `ThemeData`.
+6. **Reference routing** — deep guidance loads on demand per task, so agent context stays lean.
+7. **Pre-flight check** — a mechanical checklist (dark mode designed, contrast ≥ 4.5:1, 130% text scale, RTL pass, back-gestures intact, states designed…) the agent must pass before declaring UI work done.
 
 ## Install
 
@@ -75,7 +78,8 @@ Then just ask for Flutter UI work — the skill triggers automatically — or in
 
 | Command | What it does |
 |---|---|
-| `craft [target]` | Shape, then build a feature end-to-end to a production bar |
+| `interview` | Ask your design preferences (style, theme, color, animation) — all skippable |
+| `craft [target]` | Interview → shape → build a feature end-to-end to a production bar |
 | `audit` / `critique [target]` | Scored 0–20 audit against the 32 anti-pattern tells |
 | `theme` | Build or fix the foundation: tokens, schemes, component themes |
 | `typeset` / `colorize` / `layout` / `animate` | Focused enhancement passes |
