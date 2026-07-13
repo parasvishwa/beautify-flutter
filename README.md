@@ -14,7 +14,7 @@ Stop shipping the stock purple `ColorScheme.fromSeed`, the untouched `TextTheme`
 
 AI-generated Flutter apps all look the same: default Material widgets, category-reflex palettes (meditation app → sage green, AI app → purple gradient), no dark mode design, no loading/empty/error states, broken iOS back-swipe, overflow stripes at 130% text scale. That's not a model problem — it's a missing-design-system problem.
 
-`beautify-flutter` fixes it with the discipline of three of the most-starred web design skills on GitHub — [impeccable](https://github.com/pbakaus/impeccable), [Emil Kowalski's design engineering skill](https://github.com/emilkowalski/skill), and [taste-skill](https://github.com/Leonxlnx/taste-skill) — rebuilt from scratch for Flutter, Dart, Material 3, and Cupertino.
+`beautify-flutter` fixes it with the discipline of the best web-focused design skills in the AI-agent community, rebuilt from scratch for Flutter, Dart, Material 3, and Cupertino.
 
 ## What's inside
 
@@ -90,11 +90,7 @@ Material 3 theming & design tokens · `ColorScheme` seeding and tuning · dark m
 
 ## Credits
 
-Architecture and philosophy adapted for Flutter from three excellent web-focused design skills:
-
-- [pbakaus/impeccable](https://github.com/pbakaus/impeccable) — register system, command architecture, absolute bans, the AI slop test (Apache 2.0)
-- [emilkowalski/skill](https://github.com/emilkowalski/skill) — animation decision framework, duration/easing discipline, component-feel principles (MIT)
-- [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) — design read, the three dials, AI-tells taxonomy, mechanical pre-flight check (MIT)
+Architecture and philosophy draw on design-skill patterns pioneered by the open-source AI-agent design community — register systems, dial-based configuration, animation decision frameworks, anti-pattern taxonomies, and mechanical pre-flight checks — rebuilt from scratch for Flutter.
 
 Flutter guidance grounded in: Flutter 3.32–3.44 release reality, the Material 3 spec and motion tokens, Apple HIG, the [Wonderous app](https://github.com/gskinnerTeam/flutter-wonderous-app) source, FlutterCon/Flutter Forward talks, and 2025 Apple Design Award / Google Play winners.
 
