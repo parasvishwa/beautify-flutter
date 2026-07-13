@@ -30,8 +30,8 @@ TextTheme buildTextTheme(ColorScheme scheme) {
   // body: platform default (omit fontFamily), or one bundled family
 
   return TextTheme(
-    displayLarge: const TextStyle(fontFamily: display, fontSize: 44, height: 1.05, letterSpacing: -1.0, fontWeight: FontWeight.w700),
-    displayMedium: const TextStyle(fontFamily: display, fontSize: 34, height: 1.1, letterSpacing: -0.6, fontWeight: FontWeight.w700),
+    displayLarge: const TextStyle(fontFamily: display, fontSize: 44, height: 1.1, letterSpacing: -1.0, fontWeight: FontWeight.w700),  // 1.1 = the floor; tighter clips descenders
+    displayMedium: const TextStyle(fontFamily: display, fontSize: 34, height: 1.12, letterSpacing: -0.6, fontWeight: FontWeight.w700),
     headlineMedium: const TextStyle(fontFamily: display, fontSize: 26, height: 1.15, letterSpacing: -0.4, fontWeight: FontWeight.w600),
     titleLarge: const TextStyle(fontFamily: display, fontSize: 20, height: 1.2, letterSpacing: -0.2, fontWeight: FontWeight.w600),
     titleMedium: const TextStyle(fontSize: 16, height: 1.3, fontWeight: FontWeight.w600),
@@ -46,7 +46,7 @@ TextTheme buildTextTheme(ColorScheme scheme) {
 Keep M3's role names (`displayLarge` … `labelSmall`) even with custom values — components read them.
 
 Rules:
-- Body `height` 1.4–1.6; headings 1.05–1.25. Negative tracking scales with size (Flutter's `letterSpacing` is in logical px): large display ≈ fontSize × −0.02, body ≈ 0. Floor: never tighter than fontSize × −0.04 (e.g. −1.8 at 44px).
+- Body `height` 1.4–1.6; headings **1.1–1.25 — the floor is 1.1, never 1.0/none**. Tight leading on large bold text clips descenders (g/y/p/q/j) against box edges and makes adjacent lines visually collide — "tighter looks more designed" is exactly how this bug ships. A heading sitting at a container's bottom edge additionally gets bottom padding reserve (≥ fontSize × 0.1); display text never lives in a fixed-height parent (`minHeight` instead). Negative tracking scales with size (Flutter's `letterSpacing` is in logical px): large display ≈ fontSize × −0.02, body ≈ 0. Floor: never tighter than fontSize × −0.04 (e.g. −1.8 at 44px).
 - ≥ 16 for primary reading text, ≥ 14 for secondary. 11–12 only for captions/overlines.
 - ALL-CAPS labels get +0.05–0.12em tracking. Numbers in tables/tickers: `FontFeature.tabularFigures()`.
 - Prose measure 65–75ch → on wide layouts cap the text column (layout.md), don't shrink the font.

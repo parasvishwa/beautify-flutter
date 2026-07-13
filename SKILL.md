@@ -1,7 +1,7 @@
 ---
 name: beautify-flutter
 description: Use when the user wants to design, redesign, build, critique, audit, polish, theme, animate, adapt, or otherwise improve a Flutter app's UI or UX. Covers full apps, screens, widgets, components, forms, onboarding, empty states, navigation, dashboards, and settings. Handles Material 3 theming, Cupertino/iOS adaptation, design tokens, color, dark mode, typography, fonts, spacing, layout, responsive/adaptive behavior for phones/tablets/desktop/web, motion, micro-interactions, haptics, gestures, loading/empty/error states, accessibility, text scaling, performance-as-UX, and Flutter anti-patterns. Also use for bland Flutter apps that need personality, default-looking Material apps that should feel premium, or apps that feel "ported" instead of native on iOS or Android. Not for backend-only, state-management-only, or non-UI Dart tasks.
-version: 1.4.0
+version: 1.4.1
 user-invocable: true
 argument-hint: "[interview|craft · audit|critique · polish|theme|typeset|colorize|layout|animate|signature · adapt|harden|optimize · redesign] [target]"
 license: MIT
@@ -80,7 +80,7 @@ Single sources of truth: **durations/curves live in motion.md; contrast threshol
 - One accent, locked across the whole app. A teal badge on a rose-accented app is broken design.
 
 ### Typography
-- Never ship the default `TextTheme`. Deliberate scale, tuned `height` (body 1.4–1.6, headings 1.05–1.25) and `letterSpacing` (negative on large display sizes, ~0 at body).
+- Never ship the default `TextTheme`. Deliberate scale, tuned `height` (body 1.4–1.6, headings 1.1–1.25 — **1.0/none is banned**: tight leading clips descenders and overlaps adjacent lines) and `letterSpacing` (negative on large display sizes, ~0 at body).
 - Max 2 families, 2–4 weights, bundled in assets (never runtime-fetched in production).
 - Hierarchy = size + weight, not color. Body ≥ 14–16. Test everything at 130% text scale.
 
@@ -179,6 +179,7 @@ Run before declaring any UI work done. **Not optional. Any unticked box = not do
 - [ ] Dark mode: no pure #000/#FFF, elevation = lighter surface, accents desaturated?
 - [ ] Every text/background pair ≥ 4.5:1 (3:1 large text) — including hint text and disabled-looking-but-active text?
 - [ ] Type scale has tuned height/letterSpacing; hierarchy readable in grayscale (squint test)?
+- [ ] **Descender check:** no heading uses `height` < 1.1; g/y/p/q/j unclipped at every box edge; no display text in fixed-height parents; multi-line headings don't visually collide?
 - [ ] Nothing on screen is an untouched Material default?
 
 **Behavior**
