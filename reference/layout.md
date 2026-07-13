@@ -55,10 +55,61 @@ A plain `ListView` under a static `AppBar` is the default; scroll-aware composit
 - Overscroll is a design surface: `stretch` (Android 12+) comes free; a subtle custom over-scroll response on a hero header reads premium. Keep it physical, never bouncy-cartoon.
 - Since Flutter 3.27, `Row`/`Column` take `spacing:` — prefer it over repeated `SizedBox` gaps for simple runs.
 
+## Device resilience — why flagship-tested layouts break on budget phones
+
+Flutter lays out in logical pixels: `logical = physical ÷ devicePixelRatio`. Three independent multipliers make a budget phone's canvas **smaller while its text renders bigger** — and they stack:
+
+1. **Logical resolution.** The world's #1 phone resolution is **360×800dp** (Redmi/Samsung-A/Tecno class); plenty run 360×640. Your dev flagship is 411–430dp wide — testing only there tests the easiest case.
+2. **Display size / OEM density.** Users raise Android's Display size (and OEMs ship denser defaults) → `devicePixelRatio` rises → the same phone becomes **~311–330dp wide**.
+3. **System font scale.** Android 14+ reaches **200%**; 115–130% is everyday. Glyphs grow while the canvas shrank: a 120dp label at 1.3× is ~156dp wide, in a column 50dp narrower than your device.
+
+A fixed-size box in that path clips or overflows — and **release builds clip silently** (yellow stripes are debug-only), so users see breakage you never did.
+
+**The floor:** every screen survives **320×568dp @ 1.3× font scale**; **360×640 @ 1.3** must look *good*, not just survive.
+
+**The rule that fixes the whole class** (the constraints model: *constraints go down, sizes go up*): size from **available space**, never from coordinates or device models. Every overflow is a child whose minimum intrinsic size exceeds its incoming constraints — make something elastic (`Expanded`), reflowable (`Wrap`, `maxLines`), scrollable, or, last resort, shrinkable (`FittedBox`).
+
+```dart
+// "Fill the screen, scroll when it doesn't fit" screen skeleton:
+LayoutBuilder(builder: (context, constraints) => SingleChildScrollView(
+  child: ConstrainedBox(
+    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+    child: IntrinsicHeight(child: Column(
+      children: [header, form, const Spacer(), submitButton],
+    )),
+  ),
+));
+// One-line display values that must never wrap (prices, stats):
+FittedBox(fit: BoxFit.scaleDown, child: Text('₹1,24,999', maxLines: 1, style: display))
+// Chrome that genuinely can't flex (tab bars, badges): clamp, never disable
+MediaQuery.withClampedTextScaling(maxScaleFactor: 1.3, child: bottomBar)
+```
+
+Never `FittedBox` paragraphs — shrinking body text defeats the user's font-size choice; reflow it. Reading content stays functional at 2.0× with scrolling (WCAG 1.4.4).
+
+**The designSize-scaling trap.** `flutter_screenutil`-style `.w/.h/.sp` projects the designer's 375×812 frame onto the device: it scales the *box down* while system font scale pushes the *text up*, and height-ratios lie on short screens. It's zoom, not layout — it produces exactly this bug class. **Banned for product UI** (acceptable only for pixel-faithful art screens, with `minTextAdapt` and clamps). `MediaQuery.width × 0.3` math is the same disease. `auto_size_text`: sparingly — headlines/badges in bounded constraints only.
+
+**Test matrix (CI fails before users do):** 320×568 @ 1.0 · 360×640 @ 1.0 and 1.3 · 360×800 @ 1.3 (the #1 fleet device) — all must pass; 360×800 @ 2.0 functional with scrolling; landscape + ~500dp split-screen as smoke test.
+
+```dart
+testWidgets('fits budget phone at 1.3x', (tester) async {
+  tester.view.physicalSize = const Size(720, 1280);  // 360×640 @ DPR 2
+  tester.view.devicePixelRatio = 2.0;
+  tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+  addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+  await tester.pumpWidget(const MyApp());
+  expect(tester.takeException(), isNull); // overflow throws in tests — a free regression net
+});
+```
+
+Emulate on hardware: `adb shell wm size 720x1280 && adb shell wm density 320` (≈360×640dp), `adb shell settings put system font_scale 1.3`; reset with `wm size reset && wm density reset`. One cheap physical Android on the desk catches density, font scale, and low-end GPU truth (blur/shadow overdraw that's free on flagships janks a 2GB device — gate heavy effects) at once.
+
 ## Structural safety
 
 - **`SafeArea`** around screen content — notches, status bars, home indicators, camera cutouts.
-- **Overflow is a shipped bug, not a warning.** `Expanded`/`Flexible` in every `Row` holding text; `TextOverflow.ellipsis` + `maxLines` on any string you don't control; scroll views around variable content. Test the smallest supported width, landscape, and 130% text scale before declaring done.
+- **Overflow is a shipped bug, not a warning.** `Expanded`/`Flexible` in every `Row` holding text; `TextOverflow.ellipsis` + `maxLines` on any string you don't control; scroll views around variable content. Test the device-resilience matrix above before declaring done.
 - **Keyboard:** scrollable forms; focused field scrolled into view; `resizeToAvoidBottomInset` default respected; bottom CTAs padded by `MediaQuery.viewInsetsOf`.
 - Thumb zone: primary actions in the bottom third (FAB, bottom bar, sheet CTAs); destructive/rare actions top. ~75% of interactions are thumb-driven.
 - Lists: `ListView.separated` with themed hairlines *or* gap spacing — not both. Rows ≥ 48px tap height, 12–16 vertical padding.

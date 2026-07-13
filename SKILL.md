@@ -1,7 +1,7 @@
 ---
 name: beautify-flutter
 description: Use when the user wants to design, redesign, build, critique, audit, polish, theme, animate, adapt, or otherwise improve a Flutter app's UI or UX. Covers full apps, screens, widgets, components, forms, onboarding, empty states, navigation, dashboards, and settings. Handles Material 3 theming, Cupertino/iOS adaptation, design tokens, color, dark mode, typography, fonts, spacing, layout, responsive/adaptive behavior for phones/tablets/desktop/web, motion, micro-interactions, haptics, gestures, loading/empty/error states, accessibility, text scaling, performance-as-UX, and Flutter anti-patterns. Also use for bland Flutter apps that need personality, default-looking Material apps that should feel premium, or apps that feel "ported" instead of native on iOS or Android. Not for backend-only, state-management-only, or non-UI Dart tasks.
-version: 1.1.0
+version: 1.2.0
 user-invocable: true
 argument-hint: "[interview|craft · audit|critique · polish|theme|typeset|colorize|layout|animate|signature · adapt|harden|optimize · redesign] [target]"
 license: MIT
@@ -19,7 +19,7 @@ You MUST do these steps before any design work:
 
 1. **Read the project.** Open `pubspec.yaml` (packages, fonts, Flutter version signals) and the theme setup (`lib/theme/`, `main.dart` `ThemeData`, any tokens file) plus one or two representative screens. Learn what exists before adding to it. If tokens/theme exist, identity-preservation wins: work within them unless asked to overhaul.
 2. **Classify the register.** **Expressive** (design IS the product: consumer apps, content, lifestyle, games' shells, portfolio pieces, anything competing on feel) vs **Utility** (design SERVES the task: tools, dashboards, admin, b2b, forms-heavy apps). Pick by first match: task cue → surface in focus → the app's nature. Registers change the rules; see the register sections below.
-3. **Interview, then read.** For `craft`, `theme`, `redesign`, or any full-surface work, run the **Design Interview** first ([reference/interview.md](reference/interview.md)): one round of up to 4 skippable questions — **design style first, theme mode second**, then color and animation personality. Every skipped answer is inferred from the project and declared before building. Skip the interview entirely for small scoped tasks or when the prompt already answers it. Then state the **Design Read** in one line: *"Reading this as: \<app kind> for \<audience> on \<platform targets>, \<style> / \<animation personality>, \<register> register, dials \<V/M/D>."* Outside the interview, ask at most **one** clarifying question, and never when you can confidently infer.
+3. **Interview, then read.** For `craft`, `theme`, `redesign`, or any full-surface work, run the **Design Interview** first ([reference/interview.md](reference/interview.md)): one round of up to 4 questions — **design style first, then the primary theme (dark or light — this one is always asked)**, then color and animation personality; the rest are skippable. Every skipped answer is inferred from the project and declared before building. Skip the interview entirely for small scoped tasks or when the prompt already answers it. Then state the **Design Read** in one line: *"Reading this as: \<app kind> for \<audience> on \<platform targets>, \<style> / \<animation personality>, \<register> register, dials \<V/M/D>."* Outside the interview, ask at most **one** clarifying question, and never when you can confidently infer.
 4. **Set the dials** (next section) from the read, not from habit.
 5. **Load the matching references** from the routing table before writing widget code. At minimum, always load [reference/theme.md](reference/theme.md) for anything touching visuals and [reference/anti-patterns.md](reference/anti-patterns.md) for anything user-visible. **Non-optional; skipping produces generic output.**
 6. **If the project is greenfield** (no committed theme), the foundation comes first: tokens → color scheme → type scale → component themes, per [reference/theme.md](reference/theme.md), before any screen is built.
@@ -120,7 +120,8 @@ Match-and-refuse. About to write one of these? Rewrite the element with differen
 - **Side-stripe accents** — a colored left border on cards/list items/alerts. Full hairline border, background tint, or leading glyph instead.
 - **Gradient text** and glassmorphism-as-default. Blur is rare and purposeful, or absent.
 - **Centered `CircularProgressIndicator` as the loading strategy** for content-shaped screens.
-- **RenderFlex overflow stripes** at any tested size — including 130% text scale.
+- **RenderFlex overflow stripes** at any tested size — including 130% text scale and the 320dp budget-phone floor (layout.md device-resilience matrix).
+- **designSize-ratio scaling in product UI** — `flutter_screenutil` `.w/.h/.sp`, `MediaQuery.width × 0.3` math. Zoom is not layout; size from constraints.
 - **Broken platform navigation** — custom transitions or `PopScope` that eat iOS back-swipe.
 - **`shrinkWrap: true` lists inside scrollables** and non-builder lists over ~20 items.
 - **Elastic/bounce curves on UI chrome**, `Opacity` widget inside animations (use `FadeTransition`), animation on keyboard-driven actions.
@@ -170,6 +171,7 @@ Run before declaring any UI work done. **Not optional. Any unticked box = not do
 
 **Visual**
 - [ ] Light AND dark theme both designed and checked (not just compiled)?
+- [ ] **Toggle test passed:** flipped `themeMode` both directions on the busiest screens — no text, icon, divider, or fill "stays behind" (light text on light background = a resolved-once color; see theme.md §6)?
 - [ ] Dark mode: no pure #000/#FFF, elevation = lighter surface, accents desaturated?
 - [ ] Every text/background pair ≥ 4.5:1 (3:1 large text) — including hint text and disabled-looking-but-active text?
 - [ ] Type scale has tuned height/letterSpacing; hierarchy readable in grayscale (squint test)?
@@ -182,7 +184,7 @@ Run before declaring any UI work done. **Not optional. Any unticked box = not do
 - [ ] iOS back-swipe and Android predictive back intact?
 
 **Robustness**
-- [ ] No overflow at smallest supported width, landscape, AND 130% text scale?
+- [ ] No overflow across the device-resilience matrix: 320×568 @ 1.0, 360×640 @ 1.3, 360×800 @ 1.3, landscape — and functional with scrolling at 200% text scale?
 - [ ] `SafeArea` correct; keyboard doesn't cover focused fields?
 - [ ] Window size classes handled (compact/medium/expanded) if the app targets tablets/desktop/web; reading width capped?
 - [ ] Touch targets ≥ 48dp; icon-only buttons have tooltip/Semantics labels?

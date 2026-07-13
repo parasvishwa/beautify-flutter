@@ -36,13 +36,13 @@ beautify-flutter/
     ├── performance.md          # Rebuild discipline, lists, images, jank — performance as UX
     ├── signature.md            # Fragment shaders, Rive, CustomPainter, 3D, multisensory choreography
     ├── intl.md                 # i18n, RTL, direction-agnostic layout, expansion-safe design
-    ├── anti-patterns.md        # 32 tells of AI-generated Flutter + scored 0–20 audit protocol
+    ├── anti-patterns.md        # 34 tells of AI-generated Flutter + scored 0–20 audit protocol
     └── redesign.md             # Audit-first protocol for improving existing Flutter apps
 ```
 
 ## How it works
 
-1. **Design Interview** — for new designs and redesigns, the agent first asks what you want: design style (minimal / elegant premium / bold / soft / playful / editorial / dark tech / glass, each anchored to real apps), light or dark, color (give a hex code, point at your logo to extract the palette from it, or skip), and animation personality (calm / subtle / smooth premium / springy playful / dramatic). Every question is skippable — skipped answers are inferred from your project and declared so you can override in one word.
+1. **Design Interview** — for new designs and redesigns, the agent first asks what you want: design style (minimal / elegant premium / bold / soft / playful / editorial / dark tech / glass, each anchored to real apps), your **primary theme** (dark or light — always asked; the app is designed primary-first, the other mode fully derived after), color (give a hex code, point at your logo to extract the palette from it, or skip), and animation personality (calm / subtle / smooth premium / springy playful / dramatic). Every question is skippable — skipped answers are inferred from your project and declared so you can override in one word.
 2. **Design Read** — the agent classifies the app (kind, audience, platforms, register) in one line before generating anything.
 3. **Three dials** — `DESIGN_VARIANCE` / `MOTION_INTENSITY` / `VISUAL_DENSITY`, set from the read with per-app-kind presets and mechanical thresholds.
 4. **Two registers** — *Expressive* (design IS the product) and *Utility* (design SERVES the task), each with its own slop test, permissions, and bans.
@@ -80,7 +80,7 @@ Then just ask for Flutter UI work — the skill triggers automatically — or in
 |---|---|
 | `interview` | Ask your design preferences (style, theme, color, animation) — all skippable |
 | `craft [target]` | Interview → shape → build a feature end-to-end to a production bar |
-| `audit` / `critique [target]` | Scored 0–20 audit against the 32 anti-pattern tells |
+| `audit` / `critique [target]` | Scored 0–20 audit against the 34 anti-pattern tells |
 | `theme` | Build or fix the foundation: tokens, schemes, component themes |
 | `typeset` / `colorize` / `layout` / `animate` | Focused enhancement passes |
 | `adapt [target]` | Make it feel native on iOS / Android / web / desktop |
@@ -90,7 +90,7 @@ Then just ask for Flutter UI work — the skill triggers automatically — or in
 
 ## What it covers
 
-Material 3 theming & design tokens · `ColorScheme` seeding and tuning · dark mode done right · typography systems & Google Fonts · spacing scales · responsive & adaptive layout (window size classes, NavigationBar → NavigationRail) · slivers & collapsing headers · Cupertino / iOS-native feel · Android 16 edge-to-edge & predictive back · Material 3 Expressive and iOS 26 Liquid Glass (what's real in Flutter today) · animation curves, durations & springs · Hero and page transitions · haptic feedback choreography · loading skeletons, empty & error states · accessibility (Semantics, contrast, touch targets, text scaling) · internationalization & RTL · performance as UX (const, builder lists, image sizing, Impeller) · fragment shaders, Rive, CustomPainter · a 32-item taxonomy of AI-generated Flutter tells.
+Material 3 theming & design tokens · `ColorScheme` seeding and tuning · dark mode done right · typography systems & Google Fonts · spacing scales · responsive & adaptive layout (window size classes, NavigationBar → NavigationRail) · slivers & collapsing headers · Cupertino / iOS-native feel · Android 16 edge-to-edge & predictive back · Material 3 Expressive and iOS 26 Liquid Glass (what's real in Flutter today) · animation curves, durations & springs · Hero and page transitions · haptic feedback choreography · loading skeletons, empty & error states · accessibility (Semantics, contrast, touch targets, text scaling) · internationalization & RTL · performance as UX (const, builder lists, image sizing, Impeller) · fragment shaders, Rive, CustomPainter · a 34-item taxonomy of AI-generated Flutter tells.
 
 ## Credits
 

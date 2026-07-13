@@ -34,9 +34,11 @@ Extended styles, offered only when the brief hints at them: **Brutalist/Raw** (h
 
 If the user names a reference app instead of picking ("make it feel like Airbnb"), map the app to the nearest style row and say so. A follow-up worth its cost when the user is engaged: *"Any style or app you definitely DON'T want this to look like?"* — anti-preferences prune the space as fast as preferences.
 
-**Q2 · Theme mode** *(always second)*
-> "Light, dark, or both?"
-1. Both, follow system (default) · 2. Light-first · 3. Dark-first · 4. You decide
+**Q2 · Primary theme** *(always second, and ALWAYS asked — this question is never silently skipped)*
+> "What's your primary theme — dark or light?"
+1. **Light primary** · 2. **Dark primary** · 3. Both equal, follow system · 4. You decide
+
+The primary theme is the design target: the palette is tuned in that mode first, every screen is built and reviewed in it first, and demos/screenshots default to it. The other mode still ships fully designed (never a compile-only afterthought — theme.md §6 toggle test applies to both), but it is *derived after* the primary is right. If the user picks "you decide," infer from the app's scene (media/night-use/dev-tools lean dark; reading/productivity/outdoor lean light) and declare the choice.
 
 **Q3 · Color**
 > "Do you have a brand color or a logo I should match? And how much color overall?"

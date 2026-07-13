@@ -197,7 +197,72 @@ class AppColors extends ThemeExtension<AppColors> {
 // Theme.of(context).extension<AppColors>()!.success
 ```
 
-## 6. Greenfield order of operations
+## 6. Theme-switch integrity — the light-text-on-light-background bug
+
+The most common shipped theming defect: the app looks perfect in one mode, then switching modes changes the background but **some text keeps its old color** — white text on a now-white surface. It is always the same class of mistake: a color that was *resolved once* instead of *derived from the active theme on every build*. The offenders, in order of frequency:
+
+**1. Baked-in colors in shared TextStyle constants.**
+```dart
+// BROKEN: this white is forever, in both modes
+abstract final class AppTextStyles {
+  static const title = TextStyle(fontSize: 20, color: Colors.white);
+}
+```
+Fix: shared styles are **colorless** — size/weight/height only. Color joins at use time from the scheme, or via the `TextTheme` (which is built per scheme):
+```dart
+static const title = TextStyle(fontSize: 20, fontWeight: FontWeight.w600); // no color
+Text('Hi', style: AppTextStyles.title.copyWith(color: scheme.onSurface));
+// Better: just use the role — Theme.of(context).textTheme.titleLarge
+```
+
+**2. One TextTheme object passed to both modes.** A custom `TextTheme` with colors set for dark, reused inside the light `ThemeData`, ships dark's text into light mode. Fix: build the TextTheme **per scheme** and `.apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface)` — the pattern in §3/typography.md does this by taking the scheme as a parameter. Never share one colored TextTheme instance across both ThemeDatas.
+
+**3. Theme values cached outside build.** Colors read in `initState`, stored in `static` fields, singletons, or passed once into a controller don't update when the theme changes — `Theme.of(context)` in `build` does, because it subscribes the widget to theme changes. Fix: read theme in `build` (or `didChangeDependencies`), never store resolved colors long-term.
+
+**4. Broken role pairing.** Every container role has its on-role, and they only work as pairs:
+
+| Background | Text/icon on it |
+|---|---|
+| `surface` / `surfaceContainer*` | `onSurface`, `onSurfaceVariant` |
+| `primary` | `onPrimary` |
+| `primaryContainer` | `onPrimaryContainer` |
+| `secondaryContainer` | `onSecondaryContainer` |
+| `error` / `errorContainer` | `onError` / `onErrorContainer` |
+| `inverseSurface` | `onInverseSurface` |
+
+`onSurface` text on a `primary` button, or `onPrimary` text on a card, works by coincidence in one mode and fails in the other. If text sits on a color, its color comes from **that color's** on-role.
+
+**5. Hardcoded one-mode values in decorations** — a `Colors.white` card fill, a `Colors.black12` divider, shimmer/skeleton base colors, hint text grays. All become invisible or glaring in the other mode. Everything user-visible goes through scheme roles or a `ThemeExtension` (which **lerps between modes** — that's why it exists, §5).
+
+**6. Construction traps.** `ColorScheme.copyWith(brightness: .dark)` relabels the scheme without recomputing a single color; `ThemeData.dark().copyWith(colorScheme: myDark)` leaves dozens of legacy fields derived from the *default* dark palette. Build each mode in one shot from its properly-generated scheme via one shared function (`themeFor(scheme)` — §4 does this). One source of truth: pass `colorScheme:`, never also `brightness:`. And branch on `Theme.of(context).brightness`, never `MediaQuery.platformBrightness` — the latter is the OS setting and disagrees the moment the user forces an in-app mode.
+
+**7. The perimeter — things outside the Material tree that don't switch by themselves:**
+- **Status bar icons**: set per theme via `appBarTheme: AppBarTheme(systemOverlayStyle: ...)` (`SystemUiOverlayStyle.dark` = dark *icons*, for light surfaces); `AnnotatedRegion` for app-bar-less screens. A one-time `SystemChrome.setSystemUIOverlayStyle` in `main()` never re-runs on switch.
+- **Text outside a `Material` ancestor** (overlays, `showGeneralDialog`) falls back to the red/yellow-underline style and ignores theme colors → wrap in `Material(type: MaterialType.transparency)` or an explicit `DefaultTextStyle`.
+- **Cupertino widgets inside a Material app** resolve brightness from the OS, not your `themeMode` → bridge with `MaterialBasedCupertinoThemeData(materialTheme: themeData)` and resolve dynamic colors via `CupertinoDynamicColor.resolve(color, context)`.
+- **Assets & packages**: monochrome SVGs tinted at render time (`colorFilter: ColorFilter.mode(scheme.onSurface, BlendMode.srcIn)`), dual raster assets switched on `Theme.of(context).brightness`, and skeleton/shimmer base colors from the scheme (`surfaceContainerHighest`), never the README's `Colors.grey[300]`.
+- **Hint/label/divider defaults**: themed once per mode in `inputDecorationTheme`/`dividerTheme` (§4) — a hardcoded `Colors.grey[600]` hint is invisible on dark.
+
+Keep both `ThemeData`s **structurally symmetric** (same function, same TextTheme slots defined on both sides) — asymmetric themes can throw or flash during the built-in `AnimatedTheme` lerp on switch.
+
+**The toggle test (mandatory before shipping any screen):** flip `themeMode` while looking at the busiest screen, both directions — including loading, dialog, and overlay states. Every piece of text, icon, divider, and fill must visibly adapt. Anything that "stays behind" is one of the seven above. Automate two ways: the golden matrix in craft.md (both modes × two text scales), and a toggle-assert widget test that reads the *effective* rendered color:
+
+```dart
+Color effectiveColor(WidgetTester t) =>
+    t.renderObject<RenderParagraph>(find.text('Title')).text.style!.color!;
+// pump light → record → set themeMode dark → pumpAndSettle → expect color changed
+```
+
+**Grep for offenders when debugging this bug:**
+```bash
+grep -rnE "color:\s*Colors\.(white|black|grey)" lib/ --include="*.dart" | grep -v theme/
+grep -rnE "static (const|final).*TextStyle\(.*color:" lib/ --include="*.dart"
+grep -rnE "ThemeData\.(dark|light)\(\)\.copyWith|copyWith\(brightness|platformBrightness" lib/ --include="*.dart"
+grep -rnE "(baseColor|highlightColor):\s*Colors\." lib/ --include="*.dart"
+grep -rn "Theme.of(context)" lib/ --include="*.dart" | grep -iE "initState|static"
+```
+
+## 7. Greenfield order of operations
 
 1. Pick the brand hue from the brief (never a Material default; run the slop test on the choice).
 2. Generate + tune both schemes. Check contrast on every text role pair.
